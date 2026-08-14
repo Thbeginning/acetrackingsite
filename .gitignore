@@ -1,0 +1,12 @@
+# Environment variables - never commit these
+.env
+.env.local
+.env.production
+*.env
+
+# Temp files from build
+setup_primetrackcargo.sql
+body.json
+verify.json
+update_nav.js
+verify_nav.js
