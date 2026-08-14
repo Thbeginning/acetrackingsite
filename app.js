@@ -1,5 +1,5 @@
 ﻿/* ==========================================
-   PrimeTrackCargo â€” Main App JavaScript
+   PrimeTrackCargo — Main App JavaScript
    ==========================================
    Modules:
      1. Supabase Client
@@ -420,8 +420,8 @@ const MapController = (() => {
   //   â€¢ Each segment duration is proportional to its geographic distance so the
   //     icon always moves at a consistent, slow, visible speed.
   //   â€¢ The icon traverses each segment fully (0â†’100%) before moving to the next.
-  //   â€¢ On the very last segment it stops at 95% â€” visually "approaching" the
-  //     destination â€” and holds until the admin advances the stop index.
+  //   â€¢ On the very last segment it stops at 95% — visually "approaching" the
+  //     destination — and holds until the admin advances the stop index.
   //   â€¢ Speed constant: SPEED_DEG_PER_SEC controls how many degrees the icon covers
   //     per second. Lower = slower and more visible drift.
   function _startRouteAnimation(waypoints, transportType) {
@@ -451,7 +451,7 @@ const MapController = (() => {
 
     function tick(timestamp) {
       if (!transportMarker) return;
-      if (currentSeg >= totalSegments) return; // reached end â€” hold position
+      if (currentSeg >= totalSegments) return; // reached end — hold position
 
       if (!segStartTime) segStartTime = timestamp;
 
@@ -478,17 +478,17 @@ const MapController = (() => {
       if (pulseOverlay) pulseOverlay.moveTo(pos);
 
       if (rawT < 1) {
-        // Still within this segment â€” keep ticking
+        // Still within this segment — keep ticking
         _animFrameId = requestAnimationFrame(tick);
       } else if (!isLastSeg) {
-        // Completed this segment â€” snap to exact endpoint and move to next
+        // Completed this segment — snap to exact endpoint and move to next
         transportMarker.setPosition(new google.maps.LatLng(to.lat, to.lng));
         if (pulseOverlay) pulseOverlay.moveTo(new google.maps.LatLng(to.lat, to.lng));
         currentSeg++;
         segStartTime = null; // reset timer for next segment
         _animFrameId = requestAnimationFrame(tick);
       }
-      // If isLastSeg && rawT >= 1: hold at 95% â€” animation complete
+      // If isLastSeg && rawT >= 1: hold at 95% — animation complete
     }
 
     _animFrameId = requestAnimationFrame(tick);
@@ -516,7 +516,7 @@ const MapController = (() => {
       lng: (originCoords.lng + destCoords.lng) / 2,
     };
 
-    // 1. Planned route â€” purple dashed, origin to dest
+    // 1. Planned route — purple dashed, origin to dest
     plannedPolyline = new google.maps.Polyline({
       path: [originCoords, destCoords],
       geodesic: true, strokeOpacity: 0,
@@ -527,14 +527,14 @@ const MapController = (() => {
       map, zIndex: 1,
     });
 
-    // 2. Traveled path â€” green solid, origin to current
+    // 2. Traveled path — green solid, origin to current
     traveledPolyline = new google.maps.Polyline({
       path: [originCoords, iconCoords],
       geodesic: true, strokeColor: '#22c55e', strokeOpacity: 1, strokeWeight: 3,
       map, zIndex: 2,
     });
 
-    // 3. Direct path â€” teal dashed, origin to current (slightly offset for visual clarity)
+    // 3. Direct path — teal dashed, origin to current (slightly offset for visual clarity)
     directPolyline = new google.maps.Polyline({
       path: [originCoords, iconCoords],
       geodesic: true, strokeOpacity: 0,
@@ -545,7 +545,7 @@ const MapController = (() => {
       map, zIndex: 1,
     });
 
-    // 4. Origin marker â€” flag pin
+    // 4. Origin marker — flag pin
     originMarker = new google.maps.Marker({
       position: originCoords, map,
       title: 'Origin: ' + (shipment.origin || 'Origin'),
@@ -560,7 +560,7 @@ const MapController = (() => {
         <div style="color:#888;font-size:10px;margin-top:3px;">Departure point</div>
       </div>`);
 
-    // 5. Destination marker â€” orange teardrop
+    // 5. Destination marker — orange teardrop
     destMarker = new google.maps.Marker({
       position: destCoords, map,
       title: 'Destination: ' + (shipment.destination || 'Destination'),
@@ -574,7 +574,7 @@ const MapController = (() => {
     });
     addMapInfoWindow(destMarker, `
       <div style="font-family:Inter,sans-serif;padding:10px 14px;min-width:180px;">
-        <div style="font-weight:700;color:#FF8C00;font-size:13px;margin-bottom:4px;">ðŸŽ¯ Destination</div>
+        <div style="font-weight:700;color:#FF8C00;font-size:13px;margin-bottom:4px;">🎯 Destination</div>
         <div style="color:#1a1a1a;font-size:12px;font-weight:600;">${shipment.destination || 'Destination'}</div>
         <div style="color:#888;font-size:10px;margin-top:3px;">Final delivery point</div>
       </div>`);
@@ -639,7 +639,7 @@ const MapController = (() => {
         .order('stop_index', { ascending: true });
 
       if (stops && stops.length >= 2) {
-        // Admin has set real stops â€” render with full numbered-stop system
+        // Admin has set real stops — render with full numbered-stop system
         _renderRouteWithStops(stops, currentStopIndex, shipment, transportType);
         return;
       }
@@ -647,7 +647,7 @@ const MapController = (() => {
       console.warn('[MapController] route_stops fetch failed:', e.message);
     }
 
-    // â”€â”€ Priority 2: No admin stops â€” clean 2-point route (origin â†’ destination) â”€
+    // â”€â”€ Priority 2: No admin stops — clean 2-point route (origin â†’ destination) â”€
     // We do NOT generate fake intermediate waypoints. Stops over water or wrong
     // terrain are misleading to customers. The clean route shows the origin flag,
     // destination pin, and the transport icon slowly drifting along the path.
@@ -733,7 +733,7 @@ const MapController = (() => {
       });
       const iw = new google.maps.InfoWindow({
         content: `<div style="font-family:Inter,sans-serif;padding:8px 10px;min-width:160px;">
-          <div style="font-weight:700;color:#050A30;font-size:13px;">ðŸ“¦ Live Cargo</div>
+          <div style="font-weight:700;color:#050A30;font-size:13px;">📦 Live Cargo</div>
           <div style="color:#FF8C00;font-size:11px;margin-top:4px;">Real-time tracking</div>
           <div style="color:#666;font-size:10px;margin-top:2px;">Updated just now</div>
         </div>`
@@ -778,7 +778,7 @@ const MapController = (() => {
 
         // Show notification based on what changed
         if (stopChanged) {
-          UIController.showRealtimeNotification('\uD83D\uDCCD Stop advanced â€” route updated!');
+          UIController.showRealtimeNotification('\uD83D\uDCCD Stop advanced — route updated!');
         } else if (statusChanged) {
           const statusEmoji = { 'On Hold':'\u23F8\uFE0F', 'In Transit':'\uD83D\DDE3\uFE0F', 'Delivered':'\uD83C\uDF89' };
           UIController.showRealtimeNotification(`${statusEmoji[updated.status] || '\uD83D\uDCE6'} Status updated: ${updated.status}`);
@@ -885,11 +885,11 @@ const TrackingEngine = (() => {
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const UIController = (() => {
   const STATUS_STEPS = [
-    { key: 'Order Placed', icon: 'ðŸ“‹', label: 'Order Confirmed', sub: 'Shipment created & payment received' },
+    { key: 'Order Placed', icon: '📋', label: 'Order Confirmed', sub: 'Shipment created & payment received' },
     { key: 'In Transit', icon: 'âœˆï¸', label: 'In Transit', sub: 'Cargo en route to destination' },
-    { key: 'Customs Hold', icon: 'ðŸ”’', label: 'Customs Hold', sub: 'Package held at customs â€” awaiting clearance' },
-    { key: 'Customs Cleared', icon: 'ðŸ›ƒ', label: 'Customs Cleared', sub: 'Passed customs inspection' },
-    { key: 'Out for Delivery', icon: 'ðŸšš', label: 'Out for Delivery', sub: 'With local delivery courier' },
+    { key: 'Customs Hold', icon: '🔒', label: 'Customs Hold', sub: 'Package held at customs — awaiting clearance' },
+    { key: 'Customs Cleared', icon: '🛂', label: 'Customs Cleared', sub: 'Passed customs inspection' },
+    { key: 'Out for Delivery', icon: '🚚', label: 'Out for Delivery', sub: 'With local delivery courier' },
     { key: 'Delivered', icon: 'âœ…', label: 'Delivered', sub: 'Package received by recipient' },
   ];
 
@@ -948,7 +948,7 @@ const UIController = (() => {
     }
 
     // â”€â”€ Card 2: FROM / TO
-    const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val || 'â€”'; };
+    const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val || '—'; };
     set('from-name',    shipment.sender_name);
     set('from-city',    shipment.origin_city    || shipment.origin);
     set('from-country', shipment.origin_country);
@@ -957,21 +957,21 @@ const UIController = (() => {
     set('to-country',   shipment.destination_country);
 
     // â”€â”€ Card 3: Stats
-    set('stat-distance', shipment.distance_km   ? shipment.distance_km   : 'â€”');
-    set('stat-eta',      shipment.eta_display   ? shipment.eta_display   : 'â€”');
+    set('stat-distance', shipment.distance_km   ? shipment.distance_km   : '—');
+    set('stat-eta',      shipment.eta_display   ? shipment.eta_display   : '—');
     if (shipment.estimated_delivery) {
       const d = new Date(shipment.estimated_delivery);
       set('stat-arrival', d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }));
-    } else { set('stat-arrival', 'â€”'); }
+    } else { set('stat-arrival', '—'); }
 
     // â”€â”€ Card 4: Package details
     set('pkg-type',          shipment.package_type);
-    set('pkg-service',       shipment.service_type ? `Service: ${shipment.service_type}` : 'Service: â€”');
-    set('pkg-weight',        shipment.weight     ? `${shipment.weight} kg` : 'â€”');
-    set('pkg-qty',           shipment.quantity   ? `Qty: ${shipment.quantity}` : 'Qty: â€”');
-    set('pkg-dims',          shipment.dimensions ? `Dimensions: ${shipment.dimensions}` : 'Dimensions: â€”');
-    set('pkg-declared',      shipment.declared_value    ? `Declared: ${shipment.declared_value}` : 'Declared: â€”');
-    set('pkg-shipping-cost', shipment.shipping_cost     ? `Shipping: ${shipment.shipping_cost}` : 'Shipping: â€”');
+    set('pkg-service',       shipment.service_type ? `Service: ${shipment.service_type}` : 'Service: —');
+    set('pkg-weight',        shipment.weight     ? `${shipment.weight} kg` : '—');
+    set('pkg-qty',           shipment.quantity   ? `Qty: ${shipment.quantity}` : 'Qty: —');
+    set('pkg-dims',          shipment.dimensions ? `Dimensions: ${shipment.dimensions}` : 'Dimensions: —');
+    set('pkg-declared',      shipment.declared_value    ? `Declared: ${shipment.declared_value}` : 'Declared: —');
+    set('pkg-shipping-cost', shipment.shipping_cost     ? `Shipping: ${shipment.shipping_cost}` : 'Shipping: —');
 
     // â”€â”€ Card 5: On Hold alert
     const holdAlert = document.getElementById('on-hold-alert');
@@ -1117,7 +1117,7 @@ const UIController = (() => {
   function updateTransportBadge(type) {
     const badge = document.getElementById('transport-badge');
     if (!badge) return;
-    const labels = { plane: 'âœˆï¸ Air Freight', ship: 'ðŸš¢ Ocean Freight', bus: 'ðŸšŒ Road Freight', train: 'ðŸš‚ Rail Freight' };
+    const labels = { plane: 'âœˆï¸ Air Freight', ship: '🚢 Ocean Freight', bus: '🚌 Road Freight', train: '🚂 Rail Freight' };
     badge.textContent = labels[type] || 'âœˆï¸ Air Freight';
     badge.style.display = 'inline-flex';
   }
@@ -1314,20 +1314,20 @@ window.downloadWaybill = function() {
   if (!shipment) return;
 
   const content = `
-    PrimeTrackCargo â€” OFFICIAL WAYBILL
+    PrimeTrackCargo — OFFICIAL WAYBILL
     ========================================
     Tracking Number: ${shipment.tracking_number}
     Status:          ${shipment.status}
     
-    SENDER:  ${shipment.sender_name || 'â€”'}
-    RECEIVER: ${shipment.receiver_name || 'â€”'}
+    SENDER:  ${shipment.sender_name || '—'}
+    RECEIVER: ${shipment.receiver_name || '—'}
     
-    ORIGIN:      ${shipment.origin || 'â€”'}
-    DESTINATION: ${shipment.destination || 'â€”'}
+    ORIGIN:      ${shipment.origin || '—'}
+    DESTINATION: ${shipment.destination || '—'}
     
-    WEIGHT:   ${shipment.weight ? shipment.weight + ' kg' : 'â€”'}
-    CONTENTS: ${shipment.description || 'â€”'}
-    EST. DELIVERY: ${shipment.estimated_delivery || 'â€”'}
+    WEIGHT:   ${shipment.weight ? shipment.weight + ' kg' : '—'}
+    CONTENTS: ${shipment.description || '—'}
+    EST. DELIVERY: ${shipment.estimated_delivery || '—'}
     
     ========================================
     Generated: ${new Date().toLocaleString()}
@@ -1344,7 +1344,7 @@ window.downloadWaybill = function() {
   a.download = `waybill-${shipment.tracking_number}.txt`;
   a.click();
   URL.revokeObjectURL(url);
-  UIController.showRealtimeNotification('ðŸ“„ Waybill downloaded!');
+  UIController.showRealtimeNotification('📄 Waybill downloaded!');
 };
 
 // Share tracking
@@ -1358,7 +1358,7 @@ window.shareTracking = function() {
     navigator.share({ title: 'PrimeTrackCargo', text: `Track shipment ${shipment.tracking_number}`, url });
   } else {
     navigator.clipboard.writeText(url).then(() => {
-      UIController.showRealtimeNotification('ðŸ”— Tracking link copied to clipboard!');
+      UIController.showRealtimeNotification('🔗 Tracking link copied to clipboard!');
     });
   }
 };
@@ -1387,6 +1387,6 @@ document.addEventListener('DOMContentLoaded', () => {
   QuoteFormHandler.init();
   checkURLTracking();
 
-  console.log('%cðŸšš PrimeTrackCargo', 'color: #FF8C00; font-size: 18px; font-weight: bold;');
+  console.log('%c🚚 PrimeTrackCargo', 'color: #FF8C00; font-size: 18px; font-weight: bold;');
   console.log('%cPowered by Supabase Realtime + Google Maps', 'color: #050A30; font-size: 12px;');
 });
