@@ -1,5 +1,5 @@
 /* ==========================================
-   PrimeTrackCargo � Command Centre JS
+   PrimeTrackCargo - Command Centre JS
    ==========================================*/
 'use strict';
 
@@ -18,7 +18,7 @@ let modalShipmentId = null;
 let modalClientEmail = null; // email stored for the shipment currently in the modal
 
 // -------------------------------------
-// MAP STYLE � Crystal Clear Midnight
+// MAP STYLE - Crystal Clear Midnight
 // -------------------------------------
 const MIDNIGHT = [
   { elementType: 'geometry', stylers: [{ color: '#1a2744' }] },
@@ -87,7 +87,7 @@ const TRANSPORT_HUBS = {
     { name: 'Port of Jebel Ali (Dubai)', lat: 25.0103, lng: 55.0672, type: 'Major Seaport' },
     { name: 'Port of Colombo, Sri Lanka', lat: 6.9319, lng: 79.8478, type: 'Major Seaport' },
     { name: 'Gulf of Aden', lat: 11.8592, lng: 43.7665, type: 'Ocean Waypoint' },
-    { name: 'Suez Canal � Port Said', lat: 31.2567, lng: 32.2824, type: 'Canal Transit' },
+    { name: 'Suez Canal - Port Said', lat: 31.2567, lng: 32.2824, type: 'Canal Transit' },
     { name: 'Red Sea Passage', lat: 18.0, lng: 38.5, type: 'Ocean Waypoint' },
     { name: 'Port of Mombasa, Kenya', lat: -4.0435, lng: 39.6682, type: 'Major Seaport' },
     { name: 'Port of Dar es Salaam', lat: -6.8161, lng: 39.2902, type: 'Major Seaport' },
@@ -111,9 +111,9 @@ const TRANSPORT_HUBS = {
     { name: 'Kampala, Uganda', lat: 0.3476, lng: 32.5825, type: 'Capital City' },
     { name: 'Nairobi, Kenya', lat: -1.2921, lng: 36.8219, type: 'Capital City' },
     { name: 'Kinshasa, DR Congo', lat: -4.3217, lng: 15.3222, type: 'Capital City' },
-    { name: 'Yaound�, Cameroon', lat: 3.8480, lng: 11.5021, type: 'Capital City' },
+    { name: 'Yaound-, Cameroon', lat: 3.8480, lng: 11.5021, type: 'Capital City' },
     { name: 'Johannesburg, South Africa', lat: -26.2041, lng: 28.0473, type: 'Major City' },
-    { name: 'Abidjan, C�te d\'Ivoire', lat: 5.3600, lng: -4.0083, type: 'Major City' },
+    { name: 'Abidjan, C-te d\'Ivoire', lat: 5.3600, lng: -4.0083, type: 'Major City' },
     { name: 'Accra, Ghana', lat: 5.6037, lng: -0.1870, type: 'Capital City' },
     { name: 'Istanbul, Turkey', lat: 41.0082, lng: 28.9784, type: 'Major City' },
     { name: 'Muscat, Oman', lat: 23.5880, lng: 58.3829, type: 'Capital City' },
@@ -335,7 +335,7 @@ window.initAdminMap = function () {
 // -------------------------------------
 const PANELS = {
   dashboard:    { title: 'Dashboard', sub: 'Real-time operations overview' },
-  'live-update':{ title: 'Live Route Control', sub: 'Map route � transport icon � stop management' },
+  'live-update':{ title: 'Live Route Control', sub: 'Map route - transport icon - stop management' },
   shipments:    { title: 'All Shipments', sub: 'Full waybill database' },
   create:       { title: 'Create Shipment', sub: 'Add new tracking waybill' },
   milestones:   { title: 'Push Milestone', sub: 'Add tracking update for customer' },
@@ -398,9 +398,9 @@ function renderDashTable() {
   tbody.innerHTML = allShipments.slice(0, 10).map(s => `
     <tr>
       <td><code style="color:#FF8C00;font-family:monospace;font-size:12px;">${esc(s.tracking_number)}</code></td>
-      <td>${esc(s.sender_name || '�')}</td>
-      <td>${esc(s.destination || '�')}</td>
-      <td>${s.weight ? s.weight + ' kg' : '�'}</td>
+      <td>${esc(s.sender_name || '-')}</td>
+      <td>${esc(s.destination || '-')}</td>
+      <td>${s.weight ? s.weight + ' kg' : '-'}</td>
       <td><span class="status-chip ${chipCls(s.status)}">${esc(s.status)}</span></td>
       <td>
         <div style="display:flex;gap:4px;flex-wrap:wrap;">
@@ -430,12 +430,12 @@ function renderAllTable(list) {
   tbody.innerHTML = rows.map(s => `
     <tr>
       <td><code style="color:#FF8C00;font-family:monospace;font-size:12px;">${esc(s.tracking_number)}</code></td>
-      <td>${esc(s.sender_name||'�')}</td>
-      <td>${esc(s.receiver_name||'�')}</td>
-      <td style="font-size:12px;color:rgba(255,255,255,0.5);">${esc(s.origin||'�')} ? ${esc(s.destination||'�')}</td>
-      <td>${s.weight ? s.weight+' kg' : '�'}</td>
+      <td>${esc(s.sender_name||'-')}</td>
+      <td>${esc(s.receiver_name||'-')}</td>
+      <td style="font-size:12px;color:rgba(255,255,255,0.5);">${esc(s.origin||'-')} ? ${esc(s.destination||'-')}</td>
+      <td>${s.weight ? s.weight+' kg' : '-'}</td>
       <td><span class="status-chip ${chipCls(s.status)}">${esc(s.status)}</span></td>
-      <td style="color:rgba(255,255,255,0.5);font-size:12px;">${s.estimated_delivery ? new Date(s.estimated_delivery).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '�'}</td>
+      <td style="color:rgba(255,255,255,0.5);font-size:12px;">${s.estimated_delivery ? new Date(s.estimated_delivery).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '-'}</td>
       <td>
         <div style="display:flex;gap:4px;flex-wrap:wrap;">
           <button
@@ -472,7 +472,7 @@ function populateSelects() {
     const el = document.getElementById(id);
     if (!el) return;
     el.innerHTML = '<option value="">-- Select shipment --</option>' +
-      allShipments.map(s => `<option value="${s.id}" data-num="${esc(s.tracking_number)}" data-transport="${s.transport_type||'plane'}">${esc(s.tracking_number)} � ${esc(s.origin||'?')} ? ${esc(s.destination||'?')}</option>`).join('');
+      allShipments.map(s => `<option value="${s.id}" data-num="${esc(s.tracking_number)}" data-transport="${s.transport_type||'plane'}">${esc(s.tracking_number)} - ${esc(s.origin||'?')} ? ${esc(s.destination||'?')}</option>`).join('');
   });
 }
 
@@ -484,17 +484,17 @@ async function loadQuotes() {
   if (!data?.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:rgba(255,255,255,0.3);">No leads yet.</td></tr>'; return; }
   tbody.innerHTML = data.map(q => `
     <tr>
-      <td>${esc(q.name||'�')}</td>
-      <td><a href="mailto:${esc(q.email)}" style="color:#FF8C00;">${esc(q.email||'�')}</a></td>
-      <td>${esc(q.destination||'�')}</td>
-      <td>${esc(q.weight||'�')}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,0.5);">${esc(q.message||'�')}</td>
+      <td>${esc(q.name||'-')}</td>
+      <td><a href="mailto:${esc(q.email)}" style="color:#FF8C00;">${esc(q.email||'-')}</a></td>
+      <td>${esc(q.destination||'-')}</td>
+      <td>${esc(q.weight||'-')}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,0.5);">${esc(q.message||'-')}</td>
       <td style="color:rgba(255,255,255,0.4);font-size:12px;white-space:nowrap;">${new Date(q.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</td>
     </tr>`).join('');
 }
 
 // -------------------------------------
-// ROUTE � LOAD SHIPMENT
+// ROUTE - LOAD SHIPMENT
 // -------------------------------------
 async function loadShipmentRoute() {
   const shipmentId = document.getElementById('lu-shipment-select').value;
@@ -594,7 +594,7 @@ async function geocodePromise(_, address) {
 
 
 // -------------------------------------
-// ROUTE � DRAW ON MAP
+// ROUTE - DRAW ON MAP
 // -------------------------------------
 function drawRouteOnMap(stops, transportType, currentIndex) {
   if (!adminMap) return;
@@ -707,7 +707,7 @@ function addInfoWindow(marker, content) {
 }
 
 // -------------------------------------
-// ROUTE � PERSIST STOPS TO DB
+// ROUTE - PERSIST STOPS TO DB
 // -------------------------------------
 async function persistRouteStops(shipmentId, stops) {
   // Atomically replace: delete old rows, insert new rows
@@ -726,14 +726,14 @@ async function persistRouteStops(shipmentId, stops) {
   const { error } = await db.from('route_stops').insert(rows);
   if (error) {
     console.warn('[Admin] route_stops persist error:', error.message);
-    toast('?? Route in-memory only � DB sync failed: ' + error.message, true);
+    toast('?? Route in-memory only - DB sync failed: ' + error.message, true);
   } else {
-    log(`? Route stops (${rows.length}) synced to DB � customer map updated`);
+    log(`? Route stops (${rows.length}) synced to DB - customer map updated`);
   }
 }
 
 // -------------------------------------
-// ROUTE � CLEAR
+// ROUTE - CLEAR
 // -------------------------------------
 function clearRoute() {
   if (routeState.routePolyline) { routeState.routePolyline.setMap(null); routeState.routePolyline = null; }
@@ -746,7 +746,7 @@ function clearRoute() {
 }
 
 // -------------------------------------
-// ROUTE � ADVANCE TO NEXT STOP
+// ROUTE - ADVANCE TO NEXT STOP
 // -------------------------------------
 async function advanceToNextStop() {
   if (!routeState.shipment || !routeState.allStops.length) {
@@ -791,7 +791,7 @@ async function advanceToNextStop() {
   if (!error) {
     const msg = isLast
       ? `?? Arrived at FINAL DESTINATION: ${nextStop.name}`
-      : `?? Advanced to Stop ${nextIndex}/${routeState.allStops.length-1}: ${nextStop.name} � ${nextStop.reason}`;
+      : `?? Advanced to Stop ${nextIndex}/${routeState.allStops.length-1}: ${nextStop.name} - ${nextStop.reason}`;
     toast(msg);
     log(msg);
     loadShipments();
@@ -824,7 +824,7 @@ function enableAdvanceBtn(enabled) {
 }
 
 // -------------------------------------
-// ROUTE � RENDER STOPS LIST
+// ROUTE - RENDER STOPS LIST
 // -------------------------------------
 function renderStopsList(stops, currentIndex) {
   const el = document.getElementById('route-stops-list');
@@ -843,7 +843,7 @@ function renderStopsList(stops, currentIndex) {
         <div style="font-size:14px;flex-shrink:0;">${icon}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:11px;font-weight:600;color:${nameColor};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${stop.name}</div>
-          <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">${label}${stop.reason ? ' � '+stop.reason : ''}</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">${label}${stop.reason ? ' - '+stop.reason : ''}</div>
         </div>
         ${isCurrent ? '<span style="font-size:9px;font-weight:700;color:#FF8C00;background:rgba(255,140,0,0.15);padding:2px 6px;border-radius:5px;flex-shrink:0;">HERE</span>' : ''}
       </div>`;
@@ -858,7 +858,7 @@ function renderStopsList(stops, currentIndex) {
 }
 
 // -------------------------------------
-// ROUTE � TRANSPORT TYPE
+// ROUTE - TRANSPORT TYPE
 // -------------------------------------
 async function setRouteTransportType(type) {
   routeState.transportType = type;
@@ -895,7 +895,7 @@ async function setRouteTransportType(type) {
       await persistRouteStops(routeState.shipment.id, routeState.allStops);
     }
 
-    toast(`Transport changed to ${type} � route regenerated!`);
+    toast(`Transport changed to ${type} - route regenerated!`);
     log(`?? Transport type: ${type}`);
   }
 }
