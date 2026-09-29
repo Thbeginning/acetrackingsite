@@ -4,8 +4,8 @@
 'use strict';
 
 // --- Supabase ---
-const SUPABASE_URL = 'https://bphoaubiyidlihdzucmq.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJwaG9hdWJpeWlkbGloZHp1Y21xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY2NDkxNzYsImV4cCI6MjEwMjIyNTE3Nn0.GbU2VTY6Mkf7FkHGk38rjDVg-igdyJ42L9YhasC1AC0';
+const SUPABASE_URL = 'https://demxmeowtwgbcwhkugxv.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbXhtZW93dHdnYmN3aGt1Z3h2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNjM1MjYsImV4cCI6MjA5NjczOTUyNn0.CVEe-HB3cZ8Tc6M0eMYQiCWUazR1bPDIo3G_Cpoz11U';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-shipment-email`;
 
@@ -267,7 +267,7 @@ function mountDashboard() {
 }
 
 function adminLogout() {
-  sessionStorage.removeItem('plt_cmd');
+  sessionStorage.removeItem('gft_cmd');
   location.reload();
 }
 
@@ -277,7 +277,7 @@ function togglePwd() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  if (sessionStorage.getItem('plt_cmd') === '1') mountDashboard();
+  if (sessionStorage.getItem('gft_cmd') === '1') mountDashboard();
 });
 
 // -------------------------------------

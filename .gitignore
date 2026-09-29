@@ -10,3 +10,6 @@ body.json
 verify.json
 update_nav.js
 verify_nav.js
+
+# Supabase CLI temp files
+supabase/.temp/

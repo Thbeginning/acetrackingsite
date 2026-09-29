@@ -1,4 +1,4 @@
-﻿/* ==========================================
+/* ==========================================
    PrimeTrackCargo — Main App JavaScript
    ==========================================
    Modules:
@@ -16,8 +16,8 @@
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // 1. SUPABASE CLIENT
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const SUPABASE_URL = 'https://bphoaubiyidlihdzucmq.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJwaG9hdWJpeWlkbGloZHp1Y21xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY2NDkxNzYsImV4cCI6MjEwMjIyNTE3Nn0.GbU2VTY6Mkf7FkHGk38rjDVg-igdyJ42L9YhasC1AC0';
+const SUPABASE_URL = 'https://demxmeowtwgbcwhkugxv.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbXhtZW93dHdnYmN3aGt1Z3h2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNjM1MjYsImV4cCI6MjA5NjczOTUyNn0.CVEe-HB3cZ8Tc6M0eMYQiCWUazR1bPDIo3G_Cpoz11U';
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
