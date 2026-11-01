@@ -2,9 +2,9 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 // ── Config — key comes ONLY from Supabase secret, never hardcoded ──────────────
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-const FROM_EMAIL     = "contact@primetrackcargo.com";
-const FROM_NAME      = "PrimeTrackCargo";
-const WEB_URL        = "https://primetrackcargo.com";
+const FROM_EMAIL     = "info@ontracshippingcompany.com";
+const FROM_NAME      = "OntracShippingCompany";
+const WEB_URL        = "https://ontracshippingcompany.com";
 
 // ── Status config ──────────────────────────────────────────────────────────────
 function getStatusConfig(status: string): {
@@ -35,7 +35,7 @@ function getStatusConfig(status: string): {
         gradStart: "#dc2626", gradEnd: "#991b1b", badge: "CUSTOMS HOLD",
         headline: "Your Shipment Requires Attention",
         message: "Your shipment is currently being reviewed by customs authorities. This is a standard procedure for international shipments. Our specialists are actively working to resolve this as quickly as possible.",
-        tip: "📞 Please contact our support team if you need assistance with customs documentation.",
+        tip: "📧 Please contact our support team at info@ontracshippingcompany.com if you need assistance with customs documentation.",
       };
     case "Customs Cleared":
       return {
@@ -58,7 +58,7 @@ function getStatusConfig(status: string): {
         color: "#22c55e", bgColor: "rgba(34,197,94,0.12)", icon: "🎉",
         gradStart: "#16a34a", gradEnd: "#15803d", badge: "DELIVERED",
         headline: "Your Shipment Has Been Delivered",
-        message: "Your package has been delivered and signed for. Thank you for choosing PrimeTrackCargo for your logistics needs. We look forward to serving you again!",
+        message: "Your package has been delivered and signed for. Thank you for choosing OntracShippingCompany for your logistics needs. We look forward to serving you again!",
         tip: "⭐ We'd love to hear about your experience. Your feedback helps us deliver better every day.",
       };
     case "On Hold":
@@ -67,7 +67,7 @@ function getStatusConfig(status: string): {
         gradStart: "#b45309", gradEnd: "#92400e", badge: "ON HOLD",
         headline: "Your Shipment Is Currently On Hold",
         message: "Your shipment has been temporarily placed on hold. This may be due to an address discrepancy, missing documentation, or a scheduled delay. Our team is reviewing the situation.",
-        tip: "📞 Please contact our support team immediately so we can resolve this together.",
+        tip: "📧 Please contact our support team at info@ontracshippingcompany.com immediately so we can resolve this together.",
       };
     default:
       return {
@@ -138,7 +138,7 @@ function buildEmailHtml(p: {
 <body style="margin:0;padding:0;background-color:#eef2f7;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
 
 <!-- Preheader (hidden preview text) -->
-<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${escHtml(cfg.headline)} — Tracking #${escHtml(p.tracking_number)} · PrimeTrackCargo</div>
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${escHtml(cfg.headline)} — Tracking #${escHtml(p.tracking_number)} · OntracShippingCompany</div>
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eef2f7;min-height:100vh;">
 <tr><td align="center" style="padding:40px 16px;">
@@ -150,7 +150,7 @@ function buildEmailHtml(p: {
       <td style="background:#050A30;border-radius:16px 16px 0 0;padding:24px 40px;">
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
           <td style="text-align:left;vertical-align:middle;">
-            <span style="color:#ffffff;font-size:20px;font-weight:900;letter-spacing:-0.5px;">PRIME<span style="color:#FF8C00;">TRACK</span>CARGO</span><br>
+            <span style="color:#ffffff;font-size:20px;font-weight:900;letter-spacing:-0.5px;">ONTRAC<span style="color:#FF8C00;">SHIPPING</span>COMPANY</span><br>
             <span style="color:rgba(255,255,255,0.4);font-size:10px;letter-spacing:2px;text-transform:uppercase;">Global Logistics Excellence</span>
           </td>
           <td style="text-align:right;vertical-align:middle;">
@@ -271,11 +271,11 @@ function buildEmailHtml(p: {
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
           <td style="width:50%;padding-right:16px;">
             <p style="margin:0 0 6px;color:#374151;font-size:13px;font-weight:700;">📧 Customer Support</p>
-            <a href="mailto:contact@primetrackcargo.com" style="color:#FF8C00;font-size:13px;text-decoration:none;font-weight:600;">contact@primetrackcargo.com</a>
+            <a href="mailto:info@ontracshippingcompany.com" style="color:#FF8C00;font-size:13px;text-decoration:none;font-weight:600;">info@ontracshippingcompany.com</a>
           </td>
           <td style="width:50%;padding-left:16px;border-left:1px solid #e5e7eb;">
             <p style="margin:0 0 6px;color:#374151;font-size:13px;font-weight:700;">🌐 Track Online</p>
-            <a href="${WEB_URL}" style="color:#FF8C00;font-size:13px;text-decoration:none;font-weight:600;">primetrackcargo.com</a>
+            <a href="${WEB_URL}" style="color:#FF8C00;font-size:13px;text-decoration:none;font-weight:600;">ontracshippingcompany.com</a>
           </td>
         </tr></table>
       </td>
@@ -284,11 +284,11 @@ function buildEmailHtml(p: {
     <!-- ── FOOTER ── -->
     <tr>
       <td style="background:#050A30;border-radius:0 0 16px 16px;padding:32px 40px;text-align:center;">
-        <p style="margin:0 0 6px;color:#ffffff;font-size:16px;font-weight:900;letter-spacing:-0.3px;">PRIME<span style="color:#FF8C00;">TRACK</span>CARGO</p>
+        <p style="margin:0 0 6px;color:#ffffff;font-size:16px;font-weight:900;letter-spacing:-0.3px;">ONTRAC<span style="color:#FF8C00;">SHIPPING</span>COMPANY</p>
         <p style="margin:0 0 14px;color:rgba(255,255,255,0.35);font-size:11px;letter-spacing:1px;text-transform:uppercase;">Global Logistics Excellence</p>
-        <p style="margin:0 0 12px;color:rgba(255,255,255,0.4);font-size:12px;line-height:1.6;">Global Headquarters · primetrackcargo.com</p>
-        <p style="margin:0;color:rgba(255,255,255,0.25);font-size:11px;">© ${year} PrimeTrackCargo. All rights reserved. · <a href="${WEB_URL}" style="color:rgba(255,255,255,0.4);text-decoration:none;">primetrackcargo.com</a></p>
-        <p style="margin:12px 0 0;color:rgba(255,255,255,0.18);font-size:10px;line-height:1.6;">You received this email because you have a shipment registered with PrimeTrackCargo.<br>Please do not reply to this automated message — contact us at contact@primetrackcargo.com</p>
+        <p style="margin:0 0 12px;color:rgba(255,255,255,0.4);font-size:12px;line-height:1.6;">Global Headquarters · ontracshippingcompany.com</p>
+        <p style="margin:0;color:rgba(255,255,255,0.25);font-size:11px;">© ${year} OntracShippingCompany. All rights reserved. · <a href="${WEB_URL}" style="color:rgba(255,255,255,0.4);text-decoration:none;">ontracshippingcompany.com</a></p>
+        <p style="margin:12px 0 0;color:rgba(255,255,255,0.18);font-size:10px;line-height:1.6;">You received this email because you have a shipment registered with OntracShippingCompany.<br>Please do not reply to this automated message — contact us at info@ontracshippingcompany.com</p>
       </td>
     </tr>
 
@@ -319,7 +319,7 @@ Deno.serve(async (req: Request) => {
 
   // Guard: API key must be configured as a Supabase secret
   if (!RESEND_API_KEY) {
-    console.error("[MGT] RESEND_API_KEY secret is not set in Supabase.");
+    console.error("[OSC] RESEND_API_KEY secret is not set in Supabase.");
     return new Response(
       JSON.stringify({ error: "Email service not configured. Contact the administrator." }),
       { status: 500, headers: { "Content-Type": "application/json", ...CORS_HEADERS } }
@@ -363,7 +363,6 @@ Deno.serve(async (req: Request) => {
     updated_at:      shipment.updated_at      ?? new Date().toISOString(),
   });
 
-  const cfg = getStatusConfig(shipment.status ?? "");
   const subjectMap: Record<string, string> = {
     "Order Placed":     `Your Shipment Has Been Confirmed — ${shipment.tracking_number}`,
     "In Transit":       `Your Shipment Is On Its Way — ${shipment.tracking_number}`,
@@ -393,7 +392,7 @@ Deno.serve(async (req: Request) => {
   const resendData = await resendRes.json().catch(() => ({}));
 
   if (!resendRes.ok) {
-    console.error(`[PTC] Resend error (${resendRes.status}):`, JSON.stringify(resendData));
+    console.error(`[OSC] Resend error (${resendRes.status}):`, JSON.stringify(resendData));
     const errMsg = (resendData as Record<string,string>)?.message || (resendData as Record<string,string>)?.error || "Email send failed";
     return new Response(JSON.stringify({ error: errMsg, detail: resendData }), {
       status: 502,
@@ -401,7 +400,7 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  console.log(`[PTC] ✅ Email sent via Resend → ${shipment.client_email} | ${shipment.tracking_number} | ${shipment.status}`);
+  console.log(`[OSC] ✅ Email sent via Resend → ${shipment.client_email} | ${shipment.tracking_number} | ${shipment.status}`);
 
   return new Response(
     JSON.stringify({ success: true, id: (resendData as Record<string,string>).id }),
