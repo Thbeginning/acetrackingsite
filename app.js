@@ -1,5 +1,5 @@
 /* ==========================================
-   PrimeTrackCargo — Main App JavaScript
+   OntracShippingCompany — Main App JavaScript
    ==========================================
    Modules:
      1. Supabase Client
@@ -16,8 +16,8 @@
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // 1. SUPABASE CLIENT
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const SUPABASE_URL = 'https://demxmeowtwgbcwhkugxv.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbXhtZW93dHdnYmN3aGt1Z3h2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNjM1MjYsImV4cCI6MjA5NjczOTUyNn0.CVEe-HB3cZ8Tc6M0eMYQiCWUazR1bPDIo3G_Cpoz11U';
+const SUPABASE_URL = 'https://vaoqbcsiwkblareyjkdf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhb3FiY3Npd2tibGFyZXlqa2RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NTA2NzYsImV4cCI6MjEwOTAyNjY3Nn0.2fmGW4pDIokX9VvcZCmBRHB2--du5IJNkQlwnSfWtKg';
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -146,7 +146,7 @@ const MapController = (() => {
     const url = `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`;
     try {
       const res = await fetch(url, {
-        headers: { 'Accept-Language': 'en', 'User-Agent': 'PrimeTrackCargoTrace/1.0' }
+        headers: { 'Accept-Language': 'en', 'User-Agent': 'OntracShippingTrace/1.0' }
       });
       const data = await res.json();
       if (data && data.length > 0) {
@@ -1314,7 +1314,7 @@ window.downloadWaybill = function() {
   if (!shipment) return;
 
   const content = `
-    PrimeTrackCargo — OFFICIAL WAYBILL
+    OntracShippingCompany — OFFICIAL WAYBILL
     ========================================
     Tracking Number: ${shipment.tracking_number}
     Status:          ${shipment.status}
@@ -1333,8 +1333,8 @@ window.downloadWaybill = function() {
     Generated: ${new Date().toLocaleString()}
     Coordinates: ${shipment.lat?.toFixed(4)}, ${shipment.lng?.toFixed(4)}
     
-    This is an official waybill from PrimeTrackCargo.
-    PrimeTrackCargo | contact@primetrackcargo.com
+    This is an official waybill from OntracShippingCompany.
+    OntracShippingCompany | info@ontracshippingcompany.com
   `;
 
   const blob = new Blob([content], { type: 'text/plain' });
@@ -1355,7 +1355,7 @@ window.shareTracking = function() {
   const url = `${window.location.origin}${window.location.pathname}?track=${shipment.tracking_number}`;
 
   if (navigator.share) {
-    navigator.share({ title: 'PrimeTrackCargo', text: `Track shipment ${shipment.tracking_number}`, url });
+    navigator.share({ title: 'OntracShippingCompany', text: `Track shipment ${shipment.tracking_number}`, url });
   } else {
     navigator.clipboard.writeText(url).then(() => {
       UIController.showRealtimeNotification('🔗 Tracking link copied to clipboard!');
@@ -1387,6 +1387,31 @@ document.addEventListener('DOMContentLoaded', () => {
   QuoteFormHandler.init();
   checkURLTracking();
 
-  console.log('%c🚚 PrimeTrackCargo', 'color: #FF8C00; font-size: 18px; font-weight: bold;');
+  console.log('%c🚚 OntracShippingCompany', 'color: #2563EB; font-size: 18px; font-weight: bold;');
+
+  // ── Bridge: hero tracking widget on new index.html ──
+  // The new sidebar hero has window.trackShipment() defined inline.
+  // This bridge overrides it so it calls the real Supabase tracking engine.
+  window._trackShipmentNumber = function(trackingNum) {
+    if (!trackingNum) return;
+    // Populate the hero input so the number is visible
+    var heroInput = document.getElementById('hero-tracking-input');
+    if (heroInput) heroInput.value = trackingNum;
+    // Show the tracking section
+    var trackSection = document.getElementById('tracking');
+    if (trackSection) trackSection.style.display = 'block';
+    // Use the existing TrackingEngine if available
+    if (typeof TrackingEngine !== 'undefined' && TrackingEngine.search) {
+      var displayEl = document.getElementById('display-tracking-num');
+      if (displayEl) displayEl.textContent = trackingNum;
+      TrackingEngine.search(trackingNum);
+      setTimeout(function() {
+        trackSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+    } else {
+      // Fallback: redirect to track.html
+      window.location.href = 'track.html?tracking=' + encodeURIComponent(trackingNum);
+    }
+  };
   console.log('%cPowered by Supabase Realtime + Google Maps', 'color: #050A30; font-size: 12px;');
 });

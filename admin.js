@@ -1,15 +1,15 @@
-/* ==========================================
-   PrimeTrackCargo - Command Centre JS
+﻿/* ==========================================
+   OntracShippingCompany - Command Centre JS
    ==========================================*/
 'use strict';
 
 // --- Supabase ---
-const SUPABASE_URL = 'https://demxmeowtwgbcwhkugxv.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbXhtZW93dHdnYmN3aGt1Z3h2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNjM1MjYsImV4cCI6MjA5NjczOTUyNn0.CVEe-HB3cZ8Tc6M0eMYQiCWUazR1bPDIo3G_Cpoz11U';
+const SUPABASE_URL = 'https://vaoqbcsiwkblareyjkdf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhb3FiY3Npd2tibGFyZXlqa2RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NTA2NzYsImV4cCI6MjEwOTAyNjY3Nn0.2fmGW4pDIokX9VvcZCmBRHB2--du5IJNkQlwnSfWtKg';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-shipment-email`;
 
-const ADMIN_CREDS = { username: 'primetrackcargo', password: 'PrimeTrackCargo2026!' };
+const ADMIN_CREDS = { username: 'ontracshipping', password: 'OntracShipping2026!' };
 
 let allShipments = [];
 let adminMap = null;
@@ -580,7 +580,7 @@ async function geocodePromise(_, address) {
   const encoded = encodeURIComponent(address);
   const url = `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`;
   const res = await fetch(url, {
-    headers: { 'Accept-Language': 'en', 'User-Agent': 'PrimeTrackCargoTrace/1.0' }
+    headers: { 'Accept-Language': 'en', 'User-Agent': 'OntracShippingTrace/1.0' }
   });
   const data = await res.json();
   if (data && data.length > 0) {
@@ -1134,13 +1134,13 @@ function getEmailTemplate(p) {
     'Customs Hold':      { color:'#dc2626', gradStart:'#dc2626', gradEnd:'#991b1b', icon:'🔒', badge:'CUSTOMS HOLD',      headline:'Your Shipment Requires Attention',   body:'Your shipment has been temporarily held at customs for inspection. This is a standard procedure for international shipments. Our team is actively working to resolve this as quickly as possible.' },
     'Customs Cleared':   { color:'#059669', gradStart:'#059669', gradEnd:'#047857', icon:'✅', badge:'CUSTOMS CLEARED',   headline:'Customs Clearance Successful',      body:'Excellent news! Your shipment has successfully passed all customs inspections and is now continuing its journey to the final destination.' },
     'Out for Delivery':  { color:'#d97706', gradStart:'#d97706', gradEnd:'#b45309', icon:'🚚', badge:'OUT FOR DELIVERY',  headline:'Your Package Arrives Today',        body:'Your shipment is now on the delivery vehicle and is scheduled to arrive at your address today. Please ensure someone is available to receive the package.' },
-    'Delivered':         { color:'#16a34a', gradStart:'#16a34a', gradEnd:'#15803d', icon:'🎉', badge:'DELIVERED',         headline:'Your Shipment Has Been Delivered',  body:'Your shipment has been successfully delivered to the destination address. Thank you for choosing PrimeTrackCargo for your logistics needs. We look forward to serving you again.' },
+    'Delivered':         { color:'#16a34a', gradStart:'#16a34a', gradEnd:'#15803d', icon:'🎉', badge:'DELIVERED',         headline:'Your Shipment Has Been Delivered',  body:'Your shipment has been successfully delivered to the destination address. Thank you for choosing OntracShippingCompany for your logistics needs. We look forward to serving you again.' },
     'On Hold':           { color:'#b45309', gradStart:'#b45309', gradEnd:'#92400e', icon:'⏸️', badge:'ON HOLD',           headline:'Your Shipment Is Currently On Hold', body:'Your shipment has been temporarily placed on hold. Our support team has been notified and will work to resolve the issue promptly. Please do not hesitate to contact us for more details.' },
   };
   const cfg = statusCfg[p.status] || { color:'#4f46e5', gradStart:'#4f46e5', gradEnd:'#7c3aed', icon:'📦', badge:'STATUS UPDATE', headline:'Your Shipment Status Has Been Updated', body:'Your shipment status has been updated. Please check your tracking page for the latest information.' };
 
   const dateStr = new Date(p.updated_at).toLocaleString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit', timeZoneName:'short' });
-  const trackUrl = `https://primetrackcargo.com/track.html?track=${encodeURIComponent(p.tracking_number)}`;
+  const trackUrl = `https://ontracshippingcompany.com/track.html?track=${encodeURIComponent(p.tracking_number)}`;
   const hasReason = p.status_reason && p.status_reason.trim() !== '';
   const year = new Date().getFullYear();
 
@@ -1175,7 +1175,7 @@ function getEmailTemplate(p) {
 <body style="margin:0;padding:0;background-color:#eef2f7;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
 
 <!-- Preheader (hidden) -->
-<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${cfg.headline} — Tracking #${p.tracking_number} · PrimeTrackCargo</div>
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${cfg.headline} — Tracking #${p.tracking_number} · OntracShippingCompany</div>
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eef2f7;min-height:100vh;">
 <tr><td align="center" style="padding:40px 16px;">
@@ -1305,11 +1305,11 @@ function getEmailTemplate(p) {
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
           <td style="width:50%;padding-right:16px;">
             <p style="margin:0 0 6px;color:#374151;font-size:13px;font-weight:700;">📧 Customer Support</p>
-            <a href="mailto:contact@primetrackcargo.com" style="color:#FF8C00;font-size:13px;text-decoration:none;font-weight:600;">contact@primetrackcargo.com</a>
+            <a href="mailto:info@ontracshippingcompany.com" style="color:#FF8C00;font-size:13px;text-decoration:none;font-weight:600;">info@ontracshippingcompany.com</a>
           </td>
           <td style="width:50%;padding-left:16px;border-left:1px solid #e5e7eb;">
             <p style="margin:0 0 6px;color:#374151;font-size:13px;font-weight:700;">🌐 Track Online</p>
-            <a href="https://primetrackcargo.com" style="color:#FF8C00;font-size:13px;text-decoration:none;font-weight:600;">primetrackcargo.com</a>
+            <a href="https://ontracshippingcompany.com" style="color:#FF8C00;font-size:13px;text-decoration:none;font-weight:600;">ontracshippingcompany.com</a>
           </td>
         </tr></table>
       </td>
@@ -1321,8 +1321,8 @@ function getEmailTemplate(p) {
         <p style="margin:0 0 6px;color:#ffffff;font-size:16px;font-weight:900;letter-spacing:-0.3px;">MERIDIAN <span style="color:#FF8C00;">GLOBAL</span> TRANSIT</p>
         <p style="margin:0 0 14px;color:rgba(255,255,255,0.35);font-size:11px;letter-spacing:1px;text-transform:uppercase;">Global Logistics Excellence</p>
         <p style="margin:0 0 12px;color:rgba(255,255,255,0.4);font-size:12px;line-height:1.6;">1400 Logistics Blvd, Houston, TX 77032, United States</p>
-        <p style="margin:0;color:rgba(255,255,255,0.25);font-size:11px;">© ${year} PrimeTrackCargo. All rights reserved. · <a href="https://primetrackcargo.com" style="color:rgba(255,255,255,0.4);text-decoration:none;">primetrackcargo.com</a></p>
-        <p style="margin:12px 0 0;color:rgba(255,255,255,0.18);font-size:10px;line-height:1.6;">You received this email because you have a shipment registered with PrimeTrackCargo.<br>Please do not reply to this automated message — contact us at contact@primetrackcargo.com</p>
+        <p style="margin:0;color:rgba(255,255,255,0.25);font-size:11px;">© ${year} OntracShippingCompany. All rights reserved. · <a href="https://ontracshippingcompany.com" style="color:rgba(255,255,255,0.4);text-decoration:none;">ontracshippingcompany.com</a></p>
+        <p style="margin:12px 0 0;color:rgba(255,255,255,0.18);font-size:10px;line-height:1.6;">You received this email because you have a shipment registered with OntracShippingCompany.<br>Please do not reply to this automated message — contact us at info@ontracshippingcompany.com</p>
       </td>
     </tr>
 

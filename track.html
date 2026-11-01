@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Track Shipment — PrimeTrackCargo</title>
-  <meta name="description" content="Track your PrimeTrackCargo shipment in real-time. Live GPS updates, milestone history, and interactive map."/>
+  <title>Track Shipment — OntracShippingCompany</title>
+  <meta name="description" content="Track your OntracShippingCompany shipment in real-time. Live GPS updates, milestone history, and interactive map."/>
   <link rel="icon" href="Logo.jpeg"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -217,7 +217,7 @@
   <nav class="track-navbar">
     <a href="index.html" class="nav-logo">
       <div class="nav-logo-icon">
-        <img src="Logo.jpeg" alt="PrimeTrackCargo Logo" style="height: 65px; width: auto; max-width: 100%; object-fit: contain; mix-blend-mode: screen;">
+        <img src="Logo.jpeg" alt="OntracShippingCompany Logo" style="height: 65px; width: auto; max-width: 100%; object-fit: contain; mix-blend-mode: screen;">
       </div>
     </a>
     <a href="index.html" class="nav-back-btn">
@@ -261,7 +261,7 @@
     <div id="state-idle" class="state-idle">
       <div class="state-icon">📦</div>
       <div class="state-title">Ready to Track</div>
-      <p class="state-sub">Enter your PrimeTrackCargo Logistics tracking number above to see live shipment status, GPS location, and milestone history.</p>
+      <p class="state-sub">Enter your OntracShippingCompany tracking number above to see live shipment status, GPS location, and milestone history.</p>
     </div>
 
     <!-- Loading State -->
@@ -525,8 +525,8 @@
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
   <script>
   // â”€â”€ Supabase â”€â”€
-  const SUPABASE_URL = 'https://demxmeowtwgbcwhkugxv.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbXhtZW93dHdnYmN3aGt1Z3h2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNjM1MjYsImV4cCI6MjA5NjczOTUyNn0.CVEe-HB3cZ8Tc6M0eMYQiCWUazR1bPDIo3G_Cpoz11U';
+  const SUPABASE_URL = 'https://vaoqbcsiwkblareyjkdf.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhb3FiY3Npd2tibGFyZXlqa2RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0NTA2NzYsImV4cCI6MjEwOTAyNjY3Nn0.2fmGW4pDIokX9VvcZCmBRHB2--du5IJNkQlwnSfWtKg';
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -808,7 +808,7 @@
   function doDownloadWaybill() {
     if (!currentShipment) return;
     const s = currentShipment;
-    const content = `PrimeTrackCargo — OFFICIAL WAYBILL\n${'='.repeat(46)}\nTracking Number: ${s.tracking_number}\nStatus:          ${s.status}\n\nSENDER:   ${s.sender_name || '—'}\nRECEIVER: ${s.receiver_name || '—'}\n\nORIGIN:      ${s.origin || '—'}\nDESTINATION: ${s.destination || '—'}\n\nWEIGHT:   ${s.weight ? s.weight + ' kg' : '—'}\nCONTENTS: ${s.description || '—'}\nEST. DELIVERY: ${s.estimated_delivery || '—'}\n\n${'='.repeat(46)}\nGenerated: ${new Date().toLocaleString()}\n\nThis is an official waybill from PrimeTrackCargo.\ncontact@primetrackcargo.com`;
+    const content = `OntracShippingCompany — OFFICIAL WAYBILL\n${'='.repeat(46)}\nTracking Number: ${s.tracking_number}\nStatus:          ${s.status}\n\nSENDER:   ${s.sender_name || '—'}\nRECEIVER: ${s.receiver_name || '—'}\n\nORIGIN:      ${s.origin || '—'}\nDESTINATION: ${s.destination || '—'}\n\nWEIGHT:   ${s.weight ? s.weight + ' kg' : '—'}\nCONTENTS: ${s.description || '—'}\nEST. DELIVERY: ${s.estimated_delivery || '—'}\n\n${'='.repeat(46)}\nGenerated: ${new Date().toLocaleString()}\n\nThis is an official waybill from OntracShippingCompany.\ninfo@ontracshippingcompany.com`;
     const blob = new Blob([content], { type: 'text/plain' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
@@ -824,7 +824,7 @@
     if (!currentShipment) return;
     const url = window.location.href;
     if (navigator.share) {
-      navigator.share({ title: 'PrimeTrackCargo', text: `Track shipment ${currentShipment.tracking_number}`, url });
+      navigator.share({ title: 'OntracShippingCompany', text: `Track shipment ${currentShipment.tracking_number}`, url });
     } else {
       navigator.clipboard.writeText(url).then(() => showToast('🔗 Tracking link copied to clipboard!'));
     }

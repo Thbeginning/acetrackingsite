@@ -1,6 +1,6 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- PRIMETRACKCARGO — COMPLETE DATABASE SETUP
--- Run this entire script in the Supabase SQL Editor for project: demxmeowtwgbcwhkugxv
+-- ACE TRACKING WEBSITE — COMPLETE DATABASE SETUP
+-- Run this entire script in the Supabase SQL Editor for project: vaoqbcsiwkblareyjkdf
 -- ─────────────────────────────────────────────────────────────────────────────
 
 -- Enable UUID extension
@@ -170,5 +170,5 @@ CREATE POLICY "Public Access"
 -- SETUP COMPLETE ✅
 -- Tables: shipments, milestones, route_stops, quote_requests
 -- All RLS policies are open (public read/write)
--- Project: demxmeowtwgbcwhkugxv.supabase.co
+-- Project: vaoqbcsiwkblareyjkdf.supabase.co
 -- ─────────────────────────────────────────────────────────

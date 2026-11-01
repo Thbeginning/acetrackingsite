@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        sender: { name: "PrimeTrackCargo", email: "contact@primetrackcargo.com" },
+        sender: { name: "OntracShippingCompany", email: "info@ontracshippingcompany.com" },
         to: Array.isArray(recipient) ? recipient.map(e => ({ email: e })) : [{ email: recipient }],
         subject: emailSubject,
         htmlContent: emailHtml
