@@ -1,4 +1,4 @@
-﻿/* ==========================================
+/* ==========================================
    OntracShippingCompany - Command Centre JS
    ==========================================*/
 'use strict';
@@ -1607,6 +1607,7 @@ document.getElementById('create-shipment-form')?.addEventListener('submit', asyn
     dimensions:       document.getElementById('cs-dimensions')?.value.trim() || null,
     declared_value:   document.getElementById('cs-declared-value')?.value.trim() || null,
     shipping_cost:    document.getElementById('cs-shipping-cost')?.value.trim() || null,
+    package_image_url: document.getElementById('cs-package-image-url')?.value.trim() || null,
   };
 
   const { data, error } = await db.from('shipments').insert([payload]).select('id').single();
@@ -1763,6 +1764,8 @@ function openEditModal(id) {
   document.getElementById('edit-origin-country').value    = s.origin_country || '';
   document.getElementById('edit-destination-city').value  = s.destination_city || '';
   document.getElementById('edit-destination-country').value = s.destination_country || '';
+  const pkgImgEl = document.getElementById('edit-package-image-url');
+  if (pkgImgEl) pkgImgEl.value = s.package_image_url || '';
 
   document.getElementById('edit-error').classList.add('hidden');
   document.getElementById('edit-success').classList.add('hidden');
@@ -1812,6 +1815,7 @@ async function saveEditShipment() {
     origin_country:       document.getElementById('edit-origin-country').value.trim() || null,
     destination_city:     document.getElementById('edit-destination-city').value.trim() || null,
     destination_country:  document.getElementById('edit-destination-country').value.trim() || null,
+    package_image_url:    document.getElementById('edit-package-image-url')?.value.trim() || null,
     updated_at:           new Date().toISOString(),
   };
 

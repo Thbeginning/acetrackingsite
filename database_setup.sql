@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS public.shipments (
     dimensions          TEXT,
     declared_value      TEXT,
     shipping_cost       TEXT,
+    package_image_url   TEXT,       -- Comma-separated image URL(s) shown on client tracking page
 
     -- Dates
     estimated_delivery  TEXT,

@@ -479,6 +479,15 @@
                     <input id="cs-shipping-cost" type="text" placeholder="e.g. $40.00" class="admin-input w-full bg-white/5 border border-white/10 text-white placeholder-white/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-all" />
                   </div>
                 </div>
+                <!-- Package Image URL (full width) -->
+                <div class="mt-4 p-4 rounded-xl border" style="background:rgba(255,140,0,0.05);border-color:rgba(255,140,0,0.2);">
+                  <p class="text-orange-300 text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 mb-3">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15l-5-5L5 21"/></svg>
+                    Package Image(s)
+                  </p>
+                  <input id="cs-package-image-url" type="url" placeholder="Paste image URL here (e.g. https://i.imgur.com/abc.jpg) — separate multiple with commas" class="admin-input w-full bg-white/5 border border-white/10 text-white placeholder-white/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 transition-all" />
+                  <p class="text-white/30 text-xs mt-2">This photo will appear on the client's tracking page under "Package Images". You can add multiple URLs separated by commas.</p>
+                </div>
               </div>
 
               <!-- ─── Pickup / Departure Time ─── -->
@@ -938,6 +947,16 @@
             <label class="block text-white/60 text-xs font-medium mb-2 uppercase tracking-wider">Shipping Cost</label>
             <input id="edit-shipping-cost" type="text" placeholder="e.g. $40.00" class="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500" />
           </div>
+        </div>
+
+        <!-- Package Image URL -->
+        <div class="mt-4 p-4 rounded-xl border" style="background:rgba(255,140,0,0.05);border-color:rgba(255,140,0,0.2);">
+          <p class="text-orange-300 text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 mb-3">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15l-5-5L5 21"/></svg>
+            Package Image(s)
+          </p>
+          <input id="edit-package-image-url" type="url" placeholder="Paste image URL (multiple URLs separated by commas)" class="w-full bg-white/5 border border-white/10 text-white placeholder-white/30 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500" />
+          <p class="text-white/30 text-xs mt-2">Paste a direct image link. This photo will appear on the client's tracking page under "Package Images".</p>
         </div>
 
         <div id="edit-error" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl px-4 py-3 text-sm"></div>

@@ -258,66 +258,89 @@ const MapController = (() => {
       const isNext    = idx === clampedIdx + 1;
 
       if (isOrigin) {
-        // Origin: checkered flag
         const passedOrigin = clampedIdx > 0;
-        const originSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" width="44" height="44">
-          <circle cx="22" cy="22" r="20" fill="${passedOrigin ? '#22c55e' : '#5b21b6'}" stroke="white" stroke-width="2"/>
-          <text x="22" y="28" text-anchor="middle" font-size="18" fill="white">${passedOrigin ? '\u2713' : '\uD83C\uDFC1'}</text>
+        // Professional teardrop origin pin — blue (passed: green)
+        const pinColor = passedOrigin ? '#16a34a' : '#1d4ed8';
+        const originSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 52" width="40" height="52">
+          <filter id="os"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.35)"/></filter>
+          <path d="M20 0C9 0 0 9.2 0 20.5c0 14.7 20 31.5 20 31.5S40 35.2 40 20.5C40 9.2 31 0 20 0z" fill="${pinColor}" filter="url(#os)"/>
+          <circle cx="20" cy="20" r="10" fill="rgba(255,255,255,0.25)"/>
+          ${passedOrigin
+            ? `<path d="M13 20.5l5 5 9-9" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`
+            : `<circle cx="20" cy="20" r="5" fill="white"/>`}
         </svg>`;
         const m = new google.maps.Marker({
           position: pos, map,
           title: stop.name || shipment.origin || 'Origin',
-          icon: { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(originSvg), scaledSize: new google.maps.Size(44,44), anchor: new google.maps.Point(22,22) },
+          icon: { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(originSvg), scaledSize: new google.maps.Size(40,52), anchor: new google.maps.Point(20,52) },
           zIndex: 10,
         });
         addMapInfoWindow(m, `<div style="font-family:Inter,sans-serif;padding:12px 16px;min-width:200px;">
-          <div style="font-weight:700;color:#5b21b6;font-size:13px;margin-bottom:6px;">\uD83C\uDFC1 Departure</div>
+          <div style="font-weight:700;color:${pinColor};font-size:13px;margin-bottom:6px;">&#127937; Departure</div>
           <div style="color:#111;font-size:13px;font-weight:600;">${stop.name || shipment.origin || 'Origin'}</div>
-          <div style="background:#f0fdf4;border-radius:6px;padding:4px 8px;margin-top:8px;font-size:11px;color:#16a34a;font-weight:600;">${passedOrigin ? '\u2705 Departed' : '\uD83D\uDCCD Starting point'}</div>
+          <div style="background:${passedOrigin ? '#f0fdf4' : '#eff6ff'};border-radius:6px;padding:4px 8px;margin-top:8px;font-size:11px;color:${pinColor};font-weight:600;">${passedOrigin ? '&#10003; Departed' : '&#128205; Starting point'}</div>
         </div>`);
         routeStopMarkers.push(m);
 
       } else if (isDest) {
-        // Destination: orange teardrop (green if delivered)
-        const destColor = isDelivered ? '#16a34a' : '#FF8C00';
+        // Professional teardrop destination pin — orange or green if delivered
+        const destColor = isDelivered ? '#16a34a' : '#e11d48';
+        const destSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 52" width="40" height="52">
+          <filter id="ds"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.35)"/></filter>
+          <path d="M20 0C9 0 0 9.2 0 20.5c0 14.7 20 31.5 20 31.5S40 35.2 40 20.5C40 9.2 31 0 20 0z" fill="${destColor}" filter="url(#ds)"/>
+          <circle cx="20" cy="20" r="10" fill="rgba(255,255,255,0.25)"/>
+          ${isDelivered
+            ? `<path d="M13 20.5l5 5 9-9" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`
+            : `<circle cx="20" cy="20" r="5" fill="white"/>`}
+        </svg>`;
         const m = new google.maps.Marker({
           position: pos, map,
           title: stop.name || shipment.destination || 'Destination',
-          icon: { path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z', fillColor: destColor, fillOpacity: 1, strokeColor: '#ffffff', strokeWeight: 2.5, scale: 1.2, anchor: new google.maps.Point(0, 0) },
+          icon: { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(destSvg), scaledSize: new google.maps.Size(40,52), anchor: new google.maps.Point(20,52) },
           zIndex: 10,
         });
         addMapInfoWindow(m, `<div style="font-family:Inter,sans-serif;padding:12px 16px;min-width:200px;">
-          <div style="font-weight:700;color:${destColor};font-size:13px;margin-bottom:6px;">${isDelivered ? '\uD83C\uDF89 Delivered!' : '\uD83C\uDFAF Destination'}</div>
+          <div style="font-weight:700;color:${destColor};font-size:13px;margin-bottom:6px;">${isDelivered ? '&#127881; Delivered!' : '&#127919; Destination'}</div>
           <div style="color:#111;font-size:13px;font-weight:600;">${stop.name || shipment.destination || 'Destination'}</div>
-          <div style="background:${isDelivered ? '#f0fdf4' : '#fff7ed'};border-radius:6px;padding:4px 8px;margin-top:8px;font-size:11px;color:${destColor};font-weight:600;">${isDelivered ? '\u2705 Package delivered' : '\u23F3 Awaiting arrival'}</div>
+          <div style="background:${isDelivered ? '#f0fdf4' : '#fff1f2'};border-radius:6px;padding:4px 8px;margin-top:8px;font-size:11px;color:${destColor};font-weight:600;">${isDelivered ? '&#10003; Package delivered' : '&#8987; Awaiting arrival'}</div>
         </div>`);
         routeStopMarkers.push(m);
 
       } else {
-        // Intermediate stop
-        let bg, innerContent, statusLabel, statusBg, statusColor;
+        // Intermediate stop — teardrop shaped with colour-coded state
+        let bg, statusLabel, statusBg, statusColor;
         if (isPast) {
-          bg = '#16a34a'; innerContent = '\u2713'; // green tick
-          statusLabel = '\u2705 Checkpoint Cleared'; statusBg = '#f0fdf4'; statusColor = '#16a34a';
+          bg = '#22c55e';
+          statusLabel = '&#10003; Checkpoint Cleared'; statusBg = '#f0fdf4'; statusColor = '#16a34a';
         } else if (isCurrent && !isDelivered) {
-          bg = '#FF8C00'; innerContent = idx; // orange with number
-          statusLabel = isOnHold ? '\u23F8 Shipment Paused Here' : '\uD83D\uDEA7 Current Position'; statusBg = isOnHold ? '#eff6ff' : '#fff7ed'; statusColor = isOnHold ? '#1d4ed8' : '#FF8C00';
+          bg = '#FF8C00';
+          statusLabel = isOnHold ? '&#9208; Shipment Paused Here' : '&#128679; Current Position'; statusBg = isOnHold ? '#eff6ff' : '#fff7ed'; statusColor = isOnHold ? '#1d4ed8' : '#FF8C00';
         } else if (isNext && isInTransit) {
-          bg = '#7c3aed'; innerContent = idx; // purple = next stop
-          statusLabel = '\u27A1\uFE0F Next Stop'; statusBg = '#f5f3ff'; statusColor = '#7c3aed';
+          bg = '#7c3aed';
+          statusLabel = '&#10145; Next Stop'; statusBg = '#f5f3ff'; statusColor = '#7c3aed';
         } else {
-          bg = '#64748b'; innerContent = idx; // gray = future
-          statusLabel = '\u23F3 Upcoming'; statusBg = '#f8fafc'; statusColor = '#64748b';
+          bg = '#94a3b8';
+          statusLabel = '&#8987; Upcoming'; statusBg = '#f8fafc'; statusColor = '#64748b';
         }
-        const sz = isPast ? 13 : 11;
-        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="38" height="38">
-          <circle cx="19" cy="19" r="17" fill="${bg}" stroke="white" stroke-width="2.5"/>
-          <text x="19" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="${sz}" font-weight="700" fill="white">${innerContent}</text>
+
+        // Teardrop pin: larger for current, normal for others
+        const pinW = isCurrent ? 36 : 30;
+        const pinH = isCurrent ? 48 : 40;
+        const innerR = isCurrent ? 10 : 8;
+        const innerLabel = isPast
+          ? `<path d="M${pinW/2-5} ${pinW/2+1}l3.5 3.5 7-7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`
+          : `<text x="${pinW/2}" y="${pinW/2+4}" text-anchor="middle" font-family="Inter,sans-serif" font-size="${isCurrent ? 11 : 9}" font-weight="700" fill="white">${idx}</text>`;
+
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${pinW} ${pinH}" width="${pinW}" height="${pinH}">
+          <filter id="ps${idx}"><feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="rgba(0,0,0,0.3)"/></filter>
+          <path d="M${pinW/2} 0C${pinW*0.225} 0 0 ${pinW*0.23} 0 ${pinW*0.5125}c0 ${pinW*0.3675} ${pinW/2} ${pinW*0.7875} ${pinW/2} ${pinW*0.7875}S${pinW} ${pinW*0.88} ${pinW} ${pinW*0.5125}C${pinW} ${pinW*0.23} ${pinW*0.775} 0 ${pinW/2} 0z" fill="${bg}" filter="url(#ps${idx})"/>
+          <circle cx="${pinW/2}" cy="${pinW/2}" r="${innerR}" fill="rgba(255,255,255,0.25)"/>
+          ${innerLabel}
         </svg>`;
         const m = new google.maps.Marker({
           position: pos, map,
           title: stop.name || `Stop ${idx}`,
-          icon: { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(38,38), anchor: new google.maps.Point(19,19) },
+          icon: { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(pinW, pinH), anchor: new google.maps.Point(pinW/2, pinH) },
           zIndex: isPast ? 7 : isCurrent ? 12 : 8,
         });
         addMapInfoWindow(m, `<div style="font-family:Inter,sans-serif;padding:12px 16px;min-width:210px;">
@@ -332,34 +355,39 @@ const MapController = (() => {
 
     // â”€â”€ 3. Transport / pause icon placed at start of current segment â”€â”€â”€â”€
     if (isOnHold) {
-      const ps = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="52" height="52">
-        <circle cx="26" cy="26" r="24" fill="#1d4ed8" stroke="white" stroke-width="2.5"/>
-        <rect x="14" y="13" width="9" height="26" rx="3" fill="white"/>
-        <rect x="29" y="13" width="9" height="26" rx="3" fill="white"/>
+      // On-hold: deep blue teardrop with pause bars
+      const ps = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 58" width="44" height="58">
+        <filter id="hs"><feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="rgba(0,0,0,0.4)"/></filter>
+        <path d="M22 0C9.85 0 0 10.1 0 22.55c0 16.15 22 35.45 22 35.45S44 38.7 44 22.55C44 10.1 34.15 0 22 0z" fill="#1d4ed8" filter="url(#hs)"/>
+        <circle cx="22" cy="22" r="11" fill="rgba(255,255,255,0.2)"/>
+        <rect x="15" y="15" width="5" height="14" rx="2" fill="white"/>
+        <rect x="24" y="15" width="5" height="14" rx="2" fill="white"/>
       </svg>`;
       transportMarker = new google.maps.Marker({
         position: startCoord, map, title: 'Shipment On Hold',
-        icon: { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(ps), scaledSize: new google.maps.Size(52,52), anchor: new google.maps.Point(26,26) },
+        icon: { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(ps), scaledSize: new google.maps.Size(44,58), anchor: new google.maps.Point(22,58) },
         zIndex: 25,
       });
       addMapInfoWindow(transportMarker, `<div style="font-family:Inter,sans-serif;padding:12px 16px;min-width:200px;">
-        <div style="font-weight:700;color:#1d4ed8;font-size:14px;margin-bottom:6px;">\u23F8 Shipment On Hold</div>
+        <div style="font-weight:700;color:#1d4ed8;font-size:14px;margin-bottom:6px;">&#9208; Shipment On Hold</div>
         <div style="color:#555;font-size:12px;">${sorted[clampedIdx]?.name || 'Current checkpoint'}</div>
         <div style="color:#888;font-size:11px;margin-top:6px;">${shipment.status_reason || 'Awaiting clearance or resolution'}</div>
       </div>`);
     } else if (isDelivered) {
-      // Show delivery icon at destination
-      const delSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="52" height="52">
-        <circle cx="26" cy="26" r="24" fill="#16a34a" stroke="white" stroke-width="2.5"/>
-        <text x="26" y="35" text-anchor="middle" font-size="26" fill="white">\u2713</text>
+      // Delivered: large green teardrop with checkmark
+      const delSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 62" width="48" height="62">
+        <filter id="dls"><feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="rgba(0,0,0,0.4)"/></filter>
+        <path d="M24 0C10.75 0 0 11 0 24.6c0 17.6 24 37.4 24 37.4S48 42.2 48 24.6C48 11 37.25 0 24 0z" fill="#16a34a" filter="url(#dls)"/>
+        <circle cx="24" cy="24" r="13" fill="rgba(255,255,255,0.2)"/>
+        <path d="M16 24.5l6 6 10-10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
       </svg>`;
       transportMarker = new google.maps.Marker({
         position: allCoords[total - 1], map, title: 'Delivered',
-        icon: { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(delSvg), scaledSize: new google.maps.Size(52,52), anchor: new google.maps.Point(26,26) },
+        icon: { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(delSvg), scaledSize: new google.maps.Size(48,62), anchor: new google.maps.Point(24,62) },
         zIndex: 25,
       });
       addMapInfoWindow(transportMarker, `<div style="font-family:Inter,sans-serif;padding:12px 16px;">
-        <div style="font-weight:700;color:#16a34a;font-size:14px;">\uD83C\uDF89 Package Delivered!</div>
+        <div style="font-weight:700;color:#16a34a;font-size:14px;">&#127881; Package Delivered!</div>
         <div style="color:#555;font-size:12px;margin-top:4px;">${sorted[total-1]?.name || shipment.destination || 'Destination'}</div>
       </div>`);
     } else {
@@ -998,6 +1026,39 @@ const UIController = (() => {
 
     updateStatus(shipment.status);
     renderMilestones(milestones);
+
+    // ── Package Images card ─────────────────────────────────────────────
+    (function renderPackageImages() {
+      const card = document.getElementById('package-images-card');
+      const body = document.getElementById('package-images-body');
+      if (!card || !body) return;
+
+      // Support comma-separated list of URLs
+      const raw = (shipment.package_image_url || '').trim();
+      if (!raw) { card.style.display = 'none'; return; }
+
+      const urls = raw.split(',').map(u => u.trim()).filter(Boolean);
+      if (!urls.length) { card.style.display = 'none'; return; }
+
+      body.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;">
+          ${urls.map((url, i) => `
+            <div style="border-radius:10px;overflow:hidden;border:1px solid #e5e7eb;background:#f9fafb;aspect-ratio:4/3;position:relative;cursor:pointer;"
+                 onclick="window.open('${url}','_blank')">
+              <img src="${url}" alt="Package image ${i+1}"
+                   style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;"
+                   onmouseover="this.style.transform='scale(1.04)'"
+                   onmouseout="this.style.transform='scale(1)'"
+                   onerror="this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#9ca3af;font-size:12px;padding:8px;text-align:center;\\'>Image unavailable</div>'"/>
+              <div style="position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;">
+                Photo ${i+1}
+              </div>
+            </div>`).join('')}
+        </div>
+        <p style="font-size:11px;color:#9ca3af;margin-top:10px;">Tap any image to view full size &middot; Provided by OntracShippingCompany logistics team</p>`;
+
+      card.style.display = 'block';
+    })();
 
     // Draw map
     MapController.drawShipmentOnMap(shipment);
