@@ -681,7 +681,15 @@ footer p.ft-p{font-size:.82rem;color:rgba(255,255,255,.4);margin-top:8px}
   .rail-wrap{padding:0 16px 40px !important}
   .stats-row{grid-template-columns:1fr 1fr}
   .stats-row > div{border-right:none;border-bottom:1px solid var(--mid)}
-  .acc-row{height:420px}
+  /* ── MOBILE SERVICES ACCORDION: vertical stack ── */
+  .acc-row{flex-direction:column !important;height:auto !important;gap:8px !important;border-radius:16px !important;overflow:visible !important;}
+  .panel{flex:none !important;height:72px !important;border-radius:12px !important;overflow:hidden !important;transition:height .45s cubic-bezier(.4,0,.2,1) !important;}
+  .panel.open{height:280px !important;box-shadow:0 8px 32px rgba(29,78,216,.25) !important;border-radius:12px !important;}
+  .vt{writing-mode:horizontal-tb !important;transform:none !important;left:20px !important;bottom:50% !important;transform:translateY(50%) !important;font-size:.82rem !important;letter-spacing:.1em !important;}
+  .panel.open .vt{opacity:0 !important;}
+  .pc{padding:20px !important;}
+  .pc h3{font-size:1.15rem !important;margin-bottom:6px !important;}
+  .pc p{font-size:.82rem !important;max-width:100% !important;}
   .faq{grid-template-columns:1fr}
   .nw{grid-template-columns:1fr}
   .cta-wrap{grid-template-columns:1fr}
