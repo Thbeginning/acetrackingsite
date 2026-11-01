@@ -1567,13 +1567,28 @@ document.getElementById('status-modal')?.addEventListener('click', e => {
 // -------------------------------------
 document.getElementById('create-shipment-form')?.addEventListener('submit', async e => {
   e.preventDefault();
-  const btn = document.getElementById('create-btn');
+  const btn   = document.getElementById('create-btn');
   const errEl = document.getElementById('create-error');
   const okEl  = document.getElementById('create-success');
   btn.disabled = true;
   btn.innerHTML = '<div style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite;"></div> Creating...';
   errEl.classList.add('hidden');
   okEl.classList.add('hidden');
+
+  // ── Upload package image first (if one was selected) ──────────
+  let uploadedImageUrl = null;
+  if (_csImageFile) {
+    const trackingVal = document.getElementById('cs-tracking').value.trim().toUpperCase() || 'shipment';
+    try {
+      csShowProgress(30, 'Uploading photo…');
+      uploadedImageUrl = await uploadImageToStorage(_csImageFile, trackingVal);
+      csShowProgress(100, 'Photo uploaded ✓');
+      setTimeout(csHideProgress, 1200);
+    } catch (imgErr) {
+      csHideProgress();
+      toast('⚠️ Image upload failed: ' + imgErr.message + ' — shipment saved without photo.', true);
+    }
+  }
 
   const payload = {
     tracking_number:  document.getElementById('cs-tracking').value.trim().toUpperCase(),
@@ -1607,7 +1622,7 @@ document.getElementById('create-shipment-form')?.addEventListener('submit', asyn
     dimensions:       document.getElementById('cs-dimensions')?.value.trim() || null,
     declared_value:   document.getElementById('cs-declared-value')?.value.trim() || null,
     shipping_cost:    document.getElementById('cs-shipping-cost')?.value.trim() || null,
-    package_image_url: document.getElementById('cs-package-image-url')?.value.trim() || null,
+    package_image_url: uploadedImageUrl || document.getElementById('cs-package-image-url')?.value.trim() || null,
   };
 
   const { data, error } = await db.from('shipments').insert([payload]).select('id').single();
@@ -1630,9 +1645,15 @@ document.getElementById('create-shipment-form')?.addEventListener('submit', asyn
     errEl.textContent = '? Error: ' + error.message;
     errEl.classList.remove('hidden');
   } else {
-    okEl.innerHTML = `? <strong>${payload.tracking_number}</strong> created! <a href="index.html?track=${payload.tracking_number}" target="_blank" style="color:#FF8C00;text-decoration:underline;">Track it ?</a>`;
+    okEl.innerHTML = `✅ <strong>${payload.tracking_number}</strong> created! <a href="track.html?track=${payload.tracking_number}" target="_blank" style="color:#FF8C00;text-decoration:underline;">Track it →</a>`;
     okEl.classList.remove('hidden');
     document.getElementById('create-shipment-form').reset();
+    // Reset image upload UI
+    _csImageFile = null;
+    document.getElementById('cs-img-preview').style.display = 'none';
+    document.getElementById('cs-img-dropzone').style.display = 'block';
+    document.getElementById('cs-img-file').value = '';
+    document.getElementById('cs-package-image-url').value = '';
     loadShipments();
     setTimeout(() => okEl.classList.add('hidden'), 8000);
   }
@@ -1646,6 +1667,105 @@ function autoGenId() {
 }
 // Alias used by admin.html button
 const generateTrackingId = autoGenId;
+
+// ─────────────────────────────────────────────────────────────────
+// PACKAGE IMAGE UPLOAD — Supabase Storage
+// ─────────────────────────────────────────────────────────────────
+const IMG_BUCKET = 'package-images';
+
+async function uploadImageToStorage(file, trackingNumber) {
+  const ext  = file.name.split('.').pop().toLowerCase();
+  const safe = (trackingNumber || 'unknown').replace(/[^a-zA-Z0-9-_]/g, '_');
+  const path = `${safe}/${Date.now()}.${ext}`;
+
+  const { data, error } = await db.storage.from(IMG_BUCKET).upload(path, file, {
+    cacheControl: '3600',
+    upsert: true,
+    contentType: file.type,
+  });
+
+  if (error) throw new Error(error.message);
+
+  const { data: urlData } = db.storage.from(IMG_BUCKET).getPublicUrl(path);
+  return urlData.publicUrl;
+}
+
+// ── CREATE form image handlers ──────────────────────────────────
+let _csImageFile = null;
+
+function csHandleImageSelect(event) {
+  const file = event.target.files[0];
+  if (file) csPreviewImage(file);
+}
+function csHandleImageDrop(event) {
+  const file = event.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) csPreviewImage(file);
+}
+function csPreviewImage(file) {
+  if (file.size > 5 * 1024 * 1024) { toast('⚠️ Image must be under 5MB.', true); return; }
+  _csImageFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('cs-img-thumb').src = e.target.result;
+    document.getElementById('cs-img-name').textContent = file.name;
+    document.getElementById('cs-img-dropzone').style.display = 'none';
+    document.getElementById('cs-img-preview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+function csRemoveImage() {
+  _csImageFile = null;
+  document.getElementById('cs-img-file').value = '';
+  document.getElementById('cs-img-thumb').src = '';
+  document.getElementById('cs-img-preview').style.display = 'none';
+  document.getElementById('cs-img-dropzone').style.display = 'block';
+  document.getElementById('cs-package-image-url').value = '';
+}
+function csShowProgress(pct, msg) {
+  document.getElementById('cs-img-progress').style.display = 'block';
+  document.getElementById('cs-img-bar').style.width = pct + '%';
+  document.getElementById('cs-img-status').textContent = msg;
+}
+function csHideProgress() {
+  document.getElementById('cs-img-progress').style.display = 'none';
+}
+
+// ── EDIT modal image handlers ────────────────────────────────────
+let _editImageFile = null;
+
+function editHandleImageSelect(event) {
+  const file = event.target.files[0];
+  if (file) editPreviewImage(file);
+}
+function editHandleImageDrop(event) {
+  const file = event.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) editPreviewImage(file);
+}
+function editPreviewImage(file) {
+  if (file.size > 5 * 1024 * 1024) { toast('⚠️ Image must be under 5MB.', true); return; }
+  _editImageFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('edit-img-thumb').src = e.target.result;
+    document.getElementById('edit-img-name').textContent = file.name;
+    document.getElementById('edit-img-preview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+function editRemoveImage() {
+  _editImageFile = null;
+  document.getElementById('edit-img-file').value = '';
+  document.getElementById('edit-img-thumb').src = '';
+  document.getElementById('edit-img-preview').style.display = 'none';
+}
+function editShowProgress(pct, msg) {
+  document.getElementById('edit-img-progress').style.display = 'block';
+  document.getElementById('edit-img-bar').style.width = pct + '%';
+  document.getElementById('edit-img-status').textContent = msg;
+}
+function editHideProgress() {
+  document.getElementById('edit-img-progress').style.display = 'none';
+}
 
 // Helper: fill the pickup time field with the current local datetime
 function setCreatePickupNow() {
@@ -1767,6 +1887,24 @@ function openEditModal(id) {
   const pkgImgEl = document.getElementById('edit-package-image-url');
   if (pkgImgEl) pkgImgEl.value = s.package_image_url || '';
 
+  // ── Show existing photo if present ───────────────────────────
+  _editImageFile = null;
+  const currentDiv   = document.getElementById('edit-img-current');
+  const currentThumb = document.getElementById('edit-img-current-thumb');
+  const editPreview  = document.getElementById('edit-img-preview');
+  if (currentDiv && currentThumb) {
+    if (s.package_image_url) {
+      currentThumb.src = s.package_image_url.split(',')[0].trim();
+      currentDiv.style.display = 'block';
+    } else {
+      currentDiv.style.display = 'none';
+    }
+  }
+  if (editPreview) editPreview.style.display = 'none';
+  const editImgFile = document.getElementById('edit-img-file');
+  if (editImgFile) editImgFile.value = '';
+  editHideProgress();
+
   document.getElementById('edit-error').classList.add('hidden');
   document.getElementById('edit-success').classList.add('hidden');
   document.getElementById('edit-modal').classList.remove('hidden');
@@ -1815,9 +1953,26 @@ async function saveEditShipment() {
     origin_country:       document.getElementById('edit-origin-country').value.trim() || null,
     destination_city:     document.getElementById('edit-destination-city').value.trim() || null,
     destination_country:  document.getElementById('edit-destination-country').value.trim() || null,
-    package_image_url:    document.getElementById('edit-package-image-url')?.value.trim() || null,
     updated_at:           new Date().toISOString(),
   };
+
+  // ── Upload new package image if selected ──────────────────────
+  if (_editImageFile) {
+    try {
+      editShowProgress(30, 'Uploading photo…');
+      const newUrl = await uploadImageToStorage(_editImageFile, payload.tracking_number);
+      payload.package_image_url = newUrl;
+      editShowProgress(100, 'Photo uploaded ✓');
+      setTimeout(editHideProgress, 1200);
+    } catch (imgErr) {
+      editHideProgress();
+      toast('⚠️ Image upload failed: ' + imgErr.message, true);
+    }
+  } else {
+    // Keep existing URL from hidden field
+    const existingUrl = document.getElementById('edit-package-image-url')?.value.trim();
+    if (existingUrl) payload.package_image_url = existingUrl;
+  }
 
   const { error } = await db.from('shipments').update(payload).eq('id', id);
 

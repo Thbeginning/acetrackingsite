@@ -168,8 +168,27 @@ CREATE POLICY "Public Access"
   WITH CHECK (bucket_id = 'assets');
 
 -- ─────────────────────────────────────────────────────────
+-- 6. PACKAGE IMAGES STORAGE BUCKET
+-- For admin-uploaded package photos shown on tracking page
+-- ─────────────────────────────────────────────────────────
+INSERT INTO storage.buckets (id, name, public)
+  VALUES ('package-images', 'package-images', true)
+  ON CONFLICT (id) DO NOTHING;
+
+-- Allow anyone to upload and view images (admin uploads, clients view)
+CREATE POLICY "Package Images Public Access"
+  ON storage.objects FOR ALL
+  USING (bucket_id = 'package-images')
+  WITH CHECK (bucket_id = 'package-images');
+
+-- Add package_image_url column if not already present
+ALTER TABLE public.shipments
+  ADD COLUMN IF NOT EXISTS package_image_url TEXT;
+
+-- ─────────────────────────────────────────────────────────
 -- SETUP COMPLETE ✅
 -- Tables: shipments, milestones, route_stops, quote_requests
+-- Storage: assets, package-images (both public)
 -- All RLS policies are open (public read/write)
 -- Project: vaoqbcsiwkblareyjkdf.supabase.co
 -- ─────────────────────────────────────────────────────────
