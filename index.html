@@ -668,13 +668,18 @@ footer p.ft-p{font-size:.82rem;color:rgba(255,255,255,.4);margin-top:8px}
   /* Hero & layout */
   .hero-grid{grid-template-columns:1fr}
   .side{display:none}
-  .hero-main{padding:88px 20px 48px !important;display:flex !important;flex-direction:column !important;justify-content:center !important;align-items:center !important;text-align:center !important}
-  .hero-body{width:100% !important;max-width:480px !important;margin:0 auto !important;display:flex !important;flex-direction:column !important;align-items:center !important;text-align:center !important}
-  .hero-body > div{width:100%;text-align:center}
-  .hero-body h1{text-align:center !important}
-  .ctas{flex-direction:column !important;align-items:stretch !important;width:100% !important;max-width:420px}
-  .ctas .btn,.ctas a{display:block !important;width:100% !important;text-align:center !important;box-sizing:border-box !important;margin:0 !important}
-  .htrack{width:100% !important;max-width:480px !important;margin:0 auto !important;box-sizing:border-box !important}
+  /* ── MOBILE HERO: perfectly centered, equal margins ── */
+  .ph-hero{overflow-x:hidden}
+  .hero-grid{grid-template-columns:1fr !important;width:100% !important}
+  .hero-main{padding:100px 24px 52px !important;display:flex !important;flex-direction:column !important;justify-content:center !important;align-items:center !important;text-align:center !important;width:100% !important;box-sizing:border-box !important;margin:0 !important}
+  .hero-body{width:100% !important;max-width:460px !important;margin:0 auto !important;display:flex !important;flex-direction:column !important;align-items:center !important;text-align:center !important;box-sizing:border-box !important}
+  .hero-body > div{width:100% !important;text-align:center !important;box-sizing:border-box !important}
+  .hero-body h1{text-align:center !important;width:100% !important}
+  .ctas{flex-direction:column !important;align-items:center !important;width:100% !important}
+  .ctas .btn,.ctas a.btn,.ctas a{display:flex !important;width:100% !important;max-width:100% !important;text-align:center !important;justify-content:center !important;box-sizing:border-box !important;margin:0 !important}
+  .htrack{width:100% !important;max-width:100% !important;margin:0 !important;box-sizing:border-box !important}
+  /* fix rail overflow pushing page right */
+  .rail-wrap{padding:0 16px 40px !important;margin:0 !important}
   .stats-row{grid-template-columns:1fr 1fr}
   .stats-row > div{border-right:none;border-bottom:1px solid var(--mid)}
   .acc-row{height:420px}
