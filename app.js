@@ -1,4 +1,4 @@
-/* ==========================================
+﻿/* ==========================================
    OntracShippingCompany — Main App JavaScript
    ==========================================
    Modules:
@@ -1027,39 +1027,44 @@ const UIController = (() => {
     updateStatus(shipment.status);
     renderMilestones(milestones);
 
-    // ── Package Images card ─────────────────────────────────────────────
+       // ── Package Images card (premium) ─────────────────────────────────────
     (function renderPackageImages() {
       const card = document.getElementById('package-images-card');
       const body = document.getElementById('package-images-body');
       if (!card || !body) return;
 
-      // Support comma-separated list of URLs
       const raw = (shipment.package_image_url || '').trim();
       if (!raw) { card.style.display = 'none'; return; }
 
-      const urls = raw.split(',').map(u => u.trim()).filter(Boolean);
+      const urls = raw.split(',').map(function(u){ return u.trim(); }).filter(Boolean);
       if (!urls.length) { card.style.display = 'none'; return; }
 
-      body.innerHTML = `
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;">
-          ${urls.map((url, i) => `
-            <div style="border-radius:10px;overflow:hidden;border:1px solid #e5e7eb;background:#f9fafb;aspect-ratio:4/3;position:relative;cursor:pointer;"
-                 onclick="window.open('${url}','_blank')">
-              <img src="${url}" alt="Package image ${i+1}"
-                   style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;"
-                   onmouseover="this.style.transform='scale(1.04)'"
-                   onmouseout="this.style.transform='scale(1)'"
-                   onerror="this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#9ca3af;font-size:12px;padding:8px;text-align:center;\\'>Image unavailable</div>'"/>
-              <div style="position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;">
-                Photo ${i+1}
-              </div>
-            </div>`).join('')}
-        </div>
-        <p style="font-size:11px;color:#9ca3af;margin-top:10px;">Tap any image to view full size &middot; Provided by OntracShippingCompany logistics team</p>`;
+      window._pkgUrls = urls;
+
+      var isSingle = urls.length === 1;
+      var gridCols = isSingle ? '1fr' : (urls.length === 2 ? '1fr 1fr' : 'repeat(auto-fill,minmax(150px,1fr))');
+      var aspect   = isSingle ? '16/9' : '4/3';
+
+      body.innerHTML = '<div style="display:grid;grid-template-columns:' + gridCols + ';gap:12px;">' +
+        urls.map(function(url, i) {
+          return '<div class="pkg-thumb" style="aspect-ratio:' + aspect + ';" onclick="pkgLbOpen(' + i + ')" title="Tap to view full size">' +
+            '<img src="' + url + '" alt="Package photo ' + (i+1) + '" loading="lazy" ' +
+              'onerror="this.parentElement.innerHTML=\'<div style=&quot;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:#9ca3af;&quot;>&#x1F4F7;<span style=&quot;font-size:11px;&quot;>Photo unavailable</span></div>\'">' +
+            '<div class="ph-badge">Photo ' + (i+1) + ' of ' + urls.length + '</div>' +
+            '<div class="zoom-icon"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg></div>' +
+          '</div>';
+        }).join('') +
+      '</div>' +
+      '<div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">' +
+        '<div style="display:flex;align-items:center;gap:6px;">' +
+          '<div style="width:8px;height:8px;background:#22c55e;border-radius:50%;"></div>' +
+          '<span style="font-size:11px;color:#6b7280;font-weight:500;">' + urls.length + ' official photo' + (urls.length > 1 ? 's' : '') + ' \u00b7 Tap to view full size</span>' +
+        '</div>' +
+        '<span style="font-size:10px;color:#d1d5db;font-weight:500;">Verified by OntracShippingCompany</span>' +
+      '</div>';
 
       card.style.display = 'block';
     })();
-
     // Draw map
     MapController.drawShipmentOnMap(shipment);
     MapController.startRealtime(shipment.id);
@@ -1475,4 +1480,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
   console.log('%cPowered by Supabase Realtime + Google Maps', 'color: #050A30; font-size: 12px;');
+});
+// ── Package image lightbox ────────────────────────────────────────────────
+var _pkgLbIdx = 0;
+
+function pkgLbOpen(idx) {
+  var urls = window._pkgUrls || [];
+  if (!urls.length) return;
+  _pkgLbIdx = idx;
+  var lb = document.getElementById('pkg-lightbox');
+  var img = document.getElementById('pkg-lb-img');
+  var counter = document.getElementById('pkg-lb-counter');
+  var prev = document.getElementById('pkg-lb-prev');
+  var next = document.getElementById('pkg-lb-next');
+  if (!lb || !img) return;
+  img.src = urls[_pkgLbIdx];
+  if (counter) counter.textContent = 'Photo ' + (_pkgLbIdx + 1) + ' of ' + urls.length;
+  if (prev) prev.style.display = urls.length > 1 ? 'flex' : 'none';
+  if (next) next.style.display = urls.length > 1 ? 'flex' : 'none';
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function pkgLbNav(dir) {
+  var urls = window._pkgUrls || [];
+  if (!urls.length) return;
+  _pkgLbIdx = (_pkgLbIdx + dir + urls.length) % urls.length;
+  var img = document.getElementById('pkg-lb-img');
+  var counter = document.getElementById('pkg-lb-counter');
+  if (img) img.src = urls[_pkgLbIdx];
+  if (counter) counter.textContent = 'Photo ' + (_pkgLbIdx + 1) + ' of ' + urls.length;
+}
+
+function pkgLbClose() {
+  var lb = document.getElementById('pkg-lightbox');
+  if (lb) lb.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close lightbox with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') pkgLbClose();
+  if (e.key === 'ArrowRight') pkgLbNav(1);
+  if (e.key === 'ArrowLeft') pkgLbNav(-1);
 });
